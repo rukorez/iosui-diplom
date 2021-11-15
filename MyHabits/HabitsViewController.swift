@@ -15,6 +15,7 @@ class HabitsViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.backgroundColor = .clear
+        collection.contentInsetAdjustmentBehavior = .always
         return collection
     }()
         
@@ -24,7 +25,7 @@ class HabitsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(named: "CustomWhite")
+        view.backgroundColor = UIColor(named: "customWhite")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
         navigationItem.title = "Сегодня"
                     
@@ -120,7 +121,7 @@ extension HabitsViewController {
     
     private func setconstraints() {
         let constraints = [
-            HabitsViewController.collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            HabitsViewController.collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             HabitsViewController.collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             HabitsViewController.collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             HabitsViewController.collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
