@@ -32,7 +32,6 @@ class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(named: "CustomWhite")
         self.title = "Информация"
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -42,6 +41,21 @@ class InfoViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         setConstraints()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                view.backgroundColor = .systemBackground
+                navigationController?.navigationBar.backgroundColor = .secondarySystemBackground
+                tabBarController?.tabBar.barTintColor = .secondarySystemBackground
+            } else {
+                view.backgroundColor = UIColor(named: "customWhite")
+            }
+        }
+    }
+
 
 }
 

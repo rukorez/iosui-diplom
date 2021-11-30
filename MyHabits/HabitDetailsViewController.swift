@@ -41,6 +41,14 @@ class HabitDetailsViewController: UIViewController {
         vc.t = true
         let nc = UINavigationController(rootViewController: vc)
         nc.modalPresentationStyle = .fullScreen
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                vc.view.backgroundColor = .systemBackground
+                nc.navigationBar.backgroundColor = .secondarySystemBackground
+            } else if traitCollection.userInterfaceStyle == .light {
+                vc.view.backgroundColor = UIColor(named: "customWhite")
+            }
+        }
         present(nc, animated: true, completion: nil)
     }
     

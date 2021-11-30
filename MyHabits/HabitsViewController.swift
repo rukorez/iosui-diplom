@@ -25,7 +25,6 @@ class HabitsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(named: "customWhite")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
         navigationItem.title = "Сегодня"
                     
@@ -43,6 +42,23 @@ class HabitsViewController: UIViewController {
         
         HabitsViewController.collectionView.reloadData()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                view.backgroundColor = .systemBackground
+                navigationController?.navigationBar.backgroundColor = .secondarySystemBackground
+                tabBarController?.tabBar.barTintColor = .secondarySystemBackground
+                HabitsViewController.collectionView.reloadData()
+            } else {
+                view.backgroundColor = UIColor(named: "customWhite")
+                HabitsViewController.collectionView.reloadData()
+            }
+        }
+    }
+
             
     @objc func add() {
         let habitVC = HabitViewController()
@@ -52,6 +68,14 @@ class HabitsViewController: UIViewController {
         habitVC.deleteButton.alpha = 0
         let habitNC = UINavigationController(rootViewController: habitVC)
         habitNC.modalPresentationStyle = .fullScreen
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                habitVC.view.backgroundColor = .systemBackground
+                habitNC.navigationBar.backgroundColor = .secondarySystemBackground
+            } else if traitCollection.userInterfaceStyle == .light {
+                habitVC.view.backgroundColor = UIColor(named: "customWhite")
+            }
+        }
         present(habitNC, animated: true, completion: nil)
     }
     
@@ -74,12 +98,21 @@ extension HabitsViewController: UICollectionViewDataSource {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: progressID, for: indexPath) as! ProgressCollectionViewCell
             cell.layer.cornerRadius = 10
+            if #available(iOS 13.0, *) {
+                if traitCollection.userInterfaceStyle == .dark {
+                    cell.backgroundColor = .tertiarySystemBackground
+                    cell.progress.progressTintColor = UIColor(named: "Fiolet")
+                } else if traitCollection.userInterfaceStyle == .light {
+                    cell.backgroundColor = . white
+                }
+            }
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: habitCell, for: indexPath) as! HabitCollectionViewCell
             cell.cell = HabitsStore.shared.habits[indexPath.row]
             cell.layer.cornerRadius = 10
             cell.habitIndicator.text = "Счетчик: \(HabitsStore.shared.habits[indexPath.row].trackDates.count)"
+            cell.backgroundColor = .tertiarySystemBackground
             return cell
         }
     }

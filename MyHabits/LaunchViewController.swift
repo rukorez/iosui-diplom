@@ -30,10 +30,21 @@ class LaunchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
         view.addSubview(logo)
         view.addSubview(label)
         setConstraints()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                view.backgroundColor = .black
+            } else {
+                view.backgroundColor = .white
+            }
+        }
     }
 
 }

@@ -21,8 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navBarAppearance = UINavigationBarAppearance()
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
         
-        
-        
         UIBarButtonItem.appearance().tintColor = UIColor(named: "Fiolet")
         
         let habitsVC = HabitsViewController()
