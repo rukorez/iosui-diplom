@@ -9,7 +9,7 @@ import UIKit
 
 class HabitsViewController: UIViewController {
     
-    static var collectionView: UICollectionView = {
+    var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -28,11 +28,11 @@ class HabitsViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
         navigationItem.title = "Сегодня"
                     
-        view.addSubview(HabitsViewController.collectionView)
-        HabitsViewController.collectionView.delegate = self
-        HabitsViewController.collectionView.dataSource = self
-        HabitsViewController.collectionView.register(ProgressCollectionViewCell.self, forCellWithReuseIdentifier: progressID)
-        HabitsViewController.collectionView.register(HabitCollectionViewCell.self, forCellWithReuseIdentifier: habitCell)
+        view.addSubview(collectionView)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(ProgressCollectionViewCell.self, forCellWithReuseIdentifier: progressID)
+        collectionView.register(HabitCollectionViewCell.self, forCellWithReuseIdentifier: habitCell)
         setconstraints()
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -40,7 +40,7 @@ class HabitsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        HabitsViewController.collectionView.reloadData()
+        collectionView.reloadData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -51,10 +51,10 @@ class HabitsViewController: UIViewController {
                 view.backgroundColor = .systemBackground
                 navigationController?.navigationBar.backgroundColor = .secondarySystemBackground
                 tabBarController?.tabBar.barTintColor = .secondarySystemBackground
-                HabitsViewController.collectionView.reloadData()
+                collectionView.reloadData()
             } else {
                 view.backgroundColor = UIColor(named: "customWhite")
-                HabitsViewController.collectionView.reloadData()
+                collectionView.reloadData()
             }
         }
     }
@@ -98,10 +98,10 @@ extension HabitsViewController: UICollectionViewDataSource {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: progressID, for: indexPath) as! ProgressCollectionViewCell
             cell.layer.cornerRadius = 10
+            cell.updateProgress()
             if #available(iOS 13.0, *) {
                 if traitCollection.userInterfaceStyle == .dark {
                     cell.backgroundColor = .tertiarySystemBackground
-                    cell.progress.progressTintColor = UIColor(named: "Fiolet")
                 } else if traitCollection.userInterfaceStyle == .light {
                     cell.backgroundColor = . white
                 }
@@ -112,7 +112,15 @@ extension HabitsViewController: UICollectionViewDataSource {
             cell.cell = HabitsStore.shared.habits[indexPath.row]
             cell.layer.cornerRadius = 10
             cell.habitIndicator.text = "Счетчик: \(HabitsStore.shared.habits[indexPath.row].trackDates.count)"
-            cell.backgroundColor = .tertiarySystemBackground
+            cell.doneButton.addAction(UIAction(handler: { _ in collectionView.reloadData()}), for: .allTouchEvents)
+            cell.habitTracked()
+            if #available(iOS 13.0, *) {
+                if traitCollection.userInterfaceStyle == .dark {
+                    cell.backgroundColor = .tertiarySystemBackground
+                } else if traitCollection.userInterfaceStyle == .light {
+                    cell.backgroundColor = . white
+                }
+            }
             return cell
         }
     }
@@ -154,10 +162,10 @@ extension HabitsViewController {
     
     private func setconstraints() {
         let constraints = [
-            HabitsViewController.collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            HabitsViewController.collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            HabitsViewController.collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            HabitsViewController.collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ]
         NSLayoutConstraint.activate(constraints)
     }

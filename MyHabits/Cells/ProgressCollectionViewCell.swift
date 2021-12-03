@@ -52,7 +52,7 @@ class ProgressCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
+    func updateProgress() {
         progress.setProgress(HabitsStore.shared.todayProgress, animated: true)
         todayProgress.text = "\(Int(HabitsStore.shared.todayProgress * 100)) %"
     }

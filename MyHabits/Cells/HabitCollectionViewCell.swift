@@ -11,21 +11,25 @@ class HabitCollectionViewCell: UICollectionViewCell {
     
     var cell: Habit? {
         didSet {
-            habitName.text = cell?.name
-            habitName.textColor = cell?.color
-            habitDate.text = cell?.dateString
+            guard let habit = cell else { return }
+            habitName.text = habit.name
+            habitName.textColor = habit.color
+            habitDate.text = habit.dateString
+            doneButton.layer.borderColor = habit.color.cgColor
+            doneButton.tintColor = habit.color
+            doneButton.setBackgroundImage(.checkmark, for: .normal)
         }
     }
     
-    var habitName: UILabel = {
+    lazy var habitName: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
     
-    var habitDate: UILabel = {
+    lazy var habitDate: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
@@ -33,7 +37,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    var habitIndicator: UILabel = {
+    lazy var habitIndicator: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
@@ -42,11 +46,14 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    var doneButton: UIButton = {
+    lazy var doneButton: UIButton = {
         var button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.borderWidth = 2.3
+        button.layer.masksToBounds = true
         button.clipsToBounds = true
-        button.backgroundColor = .clear
+        button.layer.cornerRadius = 25
+        button.addTarget(self, action: #selector(done), for: .touchUpInside)
         return button
     }()
     
@@ -58,7 +65,6 @@ class HabitCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(habitDate)
         contentView.addSubview(habitIndicator)
         contentView.addSubview(doneButton)
-        doneButton.addTarget(self, action: #selector(done), for: .touchUpInside)
         setConstraints()
     }
     
@@ -67,24 +73,22 @@ class HabitCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func done() {
-        doneButton.backgroundColor = cell!.color
-        doneButton.setImage(UIImage(systemName: "checkmark", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
-        doneButton.tintColor = .white
         if cell?.isAlreadyTakenToday == false {
+            doneButton.setBackgroundImage(.checkmark, for: .normal)
+            doneButton.tintColor = cell?.color
+            doneButton.backgroundColor = cell?.color
             HabitsStore.shared.track(cell!)
         }
-        HabitsViewController.collectionView.reloadData()
     }
     
-    override func layoutSubviews() {
+    func habitTracked() {
         if cell?.isAlreadyTakenToday == true {
             doneButton.backgroundColor = cell!.color
-            doneButton.setImage(UIImage(systemName: "checkmark", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
-            doneButton.tintColor = .white
+            doneButton.tintColor = cell?.color
+        } else {
+            doneButton.backgroundColor = .white
+            doneButton.tintColor = .clear
         }
-        doneButton.layer.borderColor = cell?.color.cgColor
-        doneButton.layer.cornerRadius = 20
-        doneButton.layer.borderWidth = CGFloat(2.3)
     }
         
 }
@@ -107,8 +111,8 @@ extension HabitCollectionViewCell {
             
             doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
             doneButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            doneButton.heightAnchor.constraint(equalToConstant: 40),
-            doneButton.widthAnchor.constraint(equalToConstant: 40)
+            doneButton.heightAnchor.constraint(equalToConstant: 50),
+            doneButton.widthAnchor.constraint(equalToConstant: 50)
         ]
         NSLayoutConstraint.activate(constr)
     }
