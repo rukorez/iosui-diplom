@@ -13,10 +13,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: scene)
+        
+        let tabBarController = UITabBarController()
+        
+        let navBarAppearance = UINavigationBarAppearance()
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        
+        UIBarButtonItem.appearance().tintColor = UIColor(named: "Fiolet")
+        
+        let habitsVC = HabitsViewController()
+        let habitsNC = UINavigationController(rootViewController: habitsVC)
+        habitsNC.tabBarItem = UITabBarItem(title: "Привычки", image: UIImage(systemName: "rectangle.grid.1x2.fill"), tag: 0)
+        
+        let infoVC = InfoViewController()
+        let infoNC = UINavigationController(rootViewController: infoVC)
+        infoNC.tabBarItem = UITabBarItem(title: "Информация", image: UIImage(systemName: "info.circle.fill"), tag: 1)
+        
+        
+        tabBarController.viewControllers = [habitsNC, infoNC]
+        tabBarController.tabBar.tintColor = UIColor(named: "Fiolet")
+        
+        window?.rootViewController = LaunchViewController()
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            self.window?.rootViewController = tabBarController
+        }
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
