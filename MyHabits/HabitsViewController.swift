@@ -109,9 +109,10 @@ extension HabitsViewController: UICollectionViewDataSource {
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: habitCell, for: indexPath) as! HabitCollectionViewCell
-            cell.cell = HabitsStore.shared.habits[indexPath.row]
+            let habits = HabitsStore.shared.habits.sorted(by: { $0.name < $1.name })
+            cell.cell = habits[indexPath.row]
             cell.layer.cornerRadius = 10
-            cell.habitIndicator.text = "Счетчик: \(HabitsStore.shared.habits[indexPath.row].trackDates.count)"
+            cell.habitIndicator.text = "Счетчик: \(habits[indexPath.row].trackDates.count)"
             cell.doneButton.addAction(UIAction(handler: { _ in collectionView.reloadData()}), for: .allTouchEvents)
             cell.habitTracked()
             if #available(iOS 13.0, *) {

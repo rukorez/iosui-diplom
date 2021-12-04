@@ -150,8 +150,8 @@ extension HabitViewController {
                 HabitsStore.shared.habits[i].name = nameTextField.text!
                 HabitsStore.shared.habits[i].date = datePicker.date
                 HabitsStore.shared.habits[i].color = colorPicker.backgroundColor!
-                self.dismissVC()
             }
+            self.dismissVC()
         } else {
             let newHabit = Habit(name: nameTextField.text!,
                                  date: datePicker.date,

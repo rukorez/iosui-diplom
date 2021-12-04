@@ -18,7 +18,6 @@ class HabitDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = habit.name
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(edit))
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -27,6 +26,15 @@ class HabitDetailsViewController: UIViewController {
         tableView.register(HabitDetailsTableViewCell.self, forCellReuseIdentifier: tableCell)
         setConstraints()
         navigationItem.largeTitleDisplayMode = .never
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationItem.title = habit.name
+        if !HabitsStore.shared.habits.contains(habit) {
+            navigationController?.popToRootViewController(animated: true)
+        }
     }
     
     @objc func edit() {
